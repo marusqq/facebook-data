@@ -1,0 +1,9 @@
+1. topX swear words
+2. under/over:
+	- X vs Y sent messages
+	- X word vs Y word
+	- under/over emojis
+3. avg char/message number
+4. avg word/message number
+5. something with images?
+6. top5 emojis? 	
