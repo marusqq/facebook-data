@@ -1,4 +1,5 @@
 
 from Parser import Parser
 
-parser = Parser('messages')
+parser = Parser()
+# --------------------------------------------------

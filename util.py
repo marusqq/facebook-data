@@ -1,6 +1,7 @@
+import json
 from pathlib import Path
-import rarfile
-import platform
+import pyunpack
+import os
 
 
 def check_if_facebook_data_path_is_okay(path) -> Path:
@@ -26,7 +27,28 @@ def check_if_facebook_data_path_is_okay(path) -> Path:
     return inbox
 
 
+def create_directory(directory_name):
+    os.mkdir(directory_name)
+
+
+def load_json_file(filepath):
+    return json.load(filepath)
+
+
 def unrar_file(filepath):
-    rar_file = rarfile.RarFile(filepath)
     parent_path = filepath.parent
-    rar_file.extractall(parent_path / 'extracted' / filepath.stem)
+    try:
+        pyunpack.Archive(filepath).extractall(parent_path)
+    except pyunpack.PatoolError as e:
+        quit(f'Patool error. Probably need to install an unzip tool. {e}')
+
+
+def get_ascii_string(string):
+    decoded_string = string.encode('latin1').decode('utf8')
+    if string != decoded_string:
+        return decoded_string
+
+    else:
+        return string
+
+
