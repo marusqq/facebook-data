@@ -1,7 +1,13 @@
 import json
 from pathlib import Path
+from typing import List
+
 import pyunpack
 import os
+
+
+def clear_screen():
+    os.system('cls')
 
 
 def check_if_facebook_data_path_is_okay(path) -> Path:
@@ -27,6 +33,16 @@ def check_if_facebook_data_path_is_okay(path) -> Path:
     return inbox
 
 
+def get_files_in_directory(path) -> List[Path]:
+    _path = Path(path)
+    return [x for x in _path.iterdir() if x.is_file()]
+
+
+def get_directories_in_directory(path) -> List[Path]:
+    _path = Path(path)
+    return [x for x in _path.iterdir() if x.is_dir()]
+
+
 def create_directory(directory_name):
     os.mkdir(directory_name)
 
@@ -50,5 +66,3 @@ def get_ascii_string(string):
 
     else:
         return string
-
-

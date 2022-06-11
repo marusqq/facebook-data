@@ -1,5 +1,3 @@
+from parser.Menu import Menu
 
-from Parser import Parser
-
-parser = Parser()
-# --------------------------------------------------
+menu = Menu()

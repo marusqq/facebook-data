@@ -1,5 +1,5 @@
 """class for user in messenger groups"""
-import util
+import parser.util
 
 
 class User:
