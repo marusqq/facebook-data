@@ -10,6 +10,11 @@ def clear_screen():
     os.system('cls')
 
 
+def get_file_size(path):
+    file_stats = os.stat(path)
+    return file_stats.st_size
+
+
 def check_if_facebook_data_path_is_okay(path) -> Path:
     """
     Checks inputted_path for path/inbox dir,
