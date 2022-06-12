@@ -19,7 +19,7 @@ class Parser:
 
         # Unrar them
         for archive in self.messenger_group_archives:
-            util.unrar_file(archive)
+            util.unzip_file(archive)
 
         # Create MessengerGroup objects
         messenger_groups = []

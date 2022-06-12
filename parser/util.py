@@ -43,6 +43,14 @@ def get_directories_in_directory(path) -> List[Path]:
     return [x for x in _path.iterdir() if x.is_dir()]
 
 
+def check_if_directory(path) -> bool:
+    return path.is_dir()
+
+
+def check_if_file(path) -> bool:
+    return path.is_file()
+
+
 def create_directory(directory_name):
     os.mkdir(directory_name)
 
@@ -51,10 +59,12 @@ def load_json_file(filepath):
     return json.load(filepath)
 
 
-def unrar_file(filepath):
-    parent_path = filepath.parent
+def unzip_file(zip_path, dest_path):
+    # parent_path = zip_path.parent
+    if not check_if_directory(dest_path):
+        create_directory(dest_path)
     try:
-        pyunpack.Archive(filepath).extractall(parent_path)
+        pyunpack.Archive(zip_path).extractall(dest_path)
     except pyunpack.PatoolError as e:
         quit(f'Patool error. Probably need to install an unzip tool. {e}')
 
@@ -66,3 +76,8 @@ def get_ascii_string(string):
 
     else:
         return string
+
+
+def delete_file(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)

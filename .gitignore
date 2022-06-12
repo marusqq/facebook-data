@@ -1,5 +1,6 @@
 # sensitive data
 data/
+data_backup/
 messages/
 
 # ide

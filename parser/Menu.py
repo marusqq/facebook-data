@@ -22,7 +22,8 @@ class Menu:
         util.clear_screen()
         waiting_in_menu = True
         while waiting_in_menu:
-            choice = self.give_choice()
+            # choice = self.give_choice()
+            choice = "2"
             if choice == "1":
                 waiting_in_menu = False
                 self._parse_data()
@@ -54,9 +55,7 @@ class Menu:
         logger.warning(msg="[2] Merge files")
         logger.warning(msg="Enter a path to merge downloaded facebook data files:")
         # fb_data_path = input('Path: ')
-        fb_data_path = os.getcwd() + '/data/may22_2021-may22_2022/'
+        fb_data_path = os.getcwd() + '/data/may22_2019-may22_2020/'
 
         merger = Merger(path=fb_data_path)
         merger.merge_files()
-
-        pass
