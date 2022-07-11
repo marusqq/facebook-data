@@ -1,13 +1,9 @@
 """class for menu workflow"""
-import logging
-import sys
 import os
 import parser.logger as logger
 import parser.util as util
 from parser.logger import logger
-from parser.Merger import Merger
-
-
+from parser.Merger import DataUnzipper
 
 
 class Menu:
@@ -32,13 +28,16 @@ class Menu:
             return
         self.run()
 
-    def give_choice(self):
+    @staticmethod
+    def give_choice():
         logger.info(msg="------------------")
         logger.info(msg="Choose an option:")
         logger.info(msg="[1] Parse data")
         logger.info(msg="[2] Merge downloaded files")
         choice = input('')
         return choice
+
+    def give_choice_2(self):
         pass
 
     def _parse_data(self):
@@ -47,10 +46,11 @@ class Menu:
 
     def _merge_files(self):
         util.clear_screen()
-        logger.info(msg="[2] Merge files")
-        logger.info(msg="Enter a path to merge downloaded facebook data files:")
-        # fb_data_path = input('Path: ')
-        fb_data_path = os.getcwd() + '/data/may22_2019-may22_2020/'
 
-        merger = Merger(path=fb_data_path)
-        merger.merge_files()
+        # logger.info(msg="Enter a path to merge downloaded facebook data files:")
+        # fb_data_path = input('Path: ')
+        fb_data_path = os.getcwd() + '/data/'
+
+        merger = DataUnzipper(path=fb_data_path)
+        logger.info(merger.unzipped_paths)
+        # merger.merge_files()

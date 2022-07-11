@@ -3,35 +3,27 @@ from parser.logger import logger
 import parser.util as util
 
 
-class Merger:
+# make sure all paths are correct after merging
+class DataUnzipper:
     def __init__(self, path):
+        self.unzipped_paths = []
+        self.files_to_unzip = []
         self.path = path
+        self.read_files_to_unzip()
+        self.unzip_files()
 
-    def merge_files(self):
-        logger.info("Looking for files to merge")
-        self._find_files()
-        if self._need_unzip:
-            self._unzip_files()
-            # self._delete_zip_files()
+    def read_files_to_unzip(self):
+        for time_period_folder in util.get_directories_in_directory(self.path):
+            files_in_time_period_folder = util.get_files_in_directory(time_period_folder)
+            logger.info(msg=f"files in {time_period_folder}: {files_in_time_period_folder}")
+            for period_file in files_in_time_period_folder:
+                logger.info(f'is this file a zip? {period_file}')
+                if util.check_extension(period_file, '.zip'):
+                    self.files_to_unzip.append(period_file)
 
-    def _find_files(self):
-        self.files = util.get_files_in_directory(self.path)
-        for file in self.files:
-            if file.suffix == '.zip':
-                self._need_unzip = True
-                return
+    def check_path_correct(self):
+        if not util.check_if_facebook_data_path_is_okay(self.path):
+            raise ValueError(f'#1 Bad facebook data path specified. Path: {self.path}')
 
-        self._need_unzip = False
-
-    def _unzip_files(self):
-        for file in self.files:
-            logger.info(f'Unzipping file: {file}, '
-                        f'file size: ~{round(util.get_file_size(file) / (1024 * 1024),3)} MB')
-            util.unzip_file(
-                zip_path=file,
-                dest_path=file.parent / 'data'
-            )
-
-    def _delete_zip_files(self):
-        for file in self.files:
-            util.delete_file(file)
+    def unzip_files(self):
+        util.unzip_files(files_to_unzip=self.files_to_unzip)

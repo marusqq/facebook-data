@@ -4,6 +4,8 @@ import sys
 
 
 class Logger:
+    console_handler = None
+
     def __init__(self):
         self.logger = logging.getLogger(name="fb-data")
         self.logger.setLevel(logging.INFO)
@@ -14,7 +16,7 @@ class Logger:
 
     def config_console_handler(self):
         self.console_handler = logging.StreamHandler(sys.stdout)
-        self.console_handler.setLevel(logging.DEBUG)
+        self.console_handler.setLevel(logging.INFO)
         self.console_handler.setFormatter(self.formatter)
 
     def get_logger(self):
