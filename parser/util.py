@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-import time
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -135,6 +135,19 @@ def unzip_file(zip_path, dest_path):
         return False, None
 
     return True, dest_path
+
+
+def get_datetime_from_string(string_date):
+    year = string_date.split('-')[0]
+    month = string_date.split('-')[1]
+    day = string_date.split('-')[2]
+
+    datetime_object = datetime.strptime(month, "%b")
+    month_number = datetime_object.month
+
+    string_date = year + '-' + str(month_number) + '-' + day
+
+    return datetime.strptime(string_date, "%Y-%m-%d")
 
 
 def get_ascii_string(string):
