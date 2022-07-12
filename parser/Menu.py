@@ -1,56 +1,60 @@
 """class for menu workflow"""
 import os
-import parser.logger as logger
+
 import parser.util as util
 from parser.logger import logger
-from parser.Merger import DataUnzipper
+
+from parser.DataUnzipper import DataUnzipper
+from parser.Analyzer import Analyzer
+
+from consolemenu import *
+from consolemenu.items import *
 
 
 class Menu:
     def __init__(self):
-        self.run()
+        self.analyzer_settings = {
+            'setting1': True,
+            'setting2': False,
+            'setting3': 3,
+            'setting4': 'bam'
+        }
 
-    def run(self):
-        util.clear_screen()
-        waiting_in_menu = True
-        while waiting_in_menu:
-            # choice = self.give_choice()
-            choice = "2"
-            if choice == "1":
-                waiting_in_menu = False
-                self._parse_data()
-            elif choice == "2":
-                waiting_in_menu = False
-                self._merge_files()
-        logger.info("Press any key to return to menu (q to quit)")
-        console_input = input()
-        if console_input.lower() == 'q':
-            return
-        self.run()
+    def menu(self, mode='main'):
+        if mode == 'main':
+            menu = ConsoleMenu("Main menu")
+            start = FunctionItem(function=self.start_analyzing, text="Start analyzing")
+            settings = FunctionItem(function=self.menu, args=['analyzer_settings'], text="Settings")
 
-    @staticmethod
-    def give_choice():
-        logger.info(msg="------------------")
-        logger.info(msg="Choose an option:")
-        logger.info(msg="[1] Parse data")
-        logger.info(msg="[2] Merge downloaded files")
-        choice = input('')
-        return choice
+            menu.append_item(start)
+            menu.append_item(settings)
+            menu.show()
+            input()
 
-    def give_choice_2(self):
-        pass
+        elif mode == 'analyzer_settings':
+            menu = ConsoleMenu("Setup analyzer")
+            for setting, value in self.analyzer_settings:
+                setting_item = FunctionItem(self._change_analyzer_settings(), args=[setting, not(value)])
+                menu.append_item(setting_item)
+            menu.show()
 
-    def _parse_data(self):
+        else:
+            self.menu()
 
-        pass
+    def _change_analyzer_settings(self, setting, value):
+        self.analyzer_settings[setting] = value
 
-    def _merge_files(self):
+    def start_analyzing(self):
         util.clear_screen()
 
-        # logger.info(msg="Enter a path to merge downloaded facebook data files:")
-        # fb_data_path = input('Path: ')
         fb_data_path = os.getcwd() + '/data/'
+        data_unzipper = DataUnzipper(path=fb_data_path)
+        data_unzipper.unzip_files()
 
-        merger = DataUnzipper(path=fb_data_path)
-        logger.info(merger.unzipped_paths)
-        # merger.merge_files()
+        # Ask for settings
+        # TODO: ask if want to change settings
+        # analyzer_settings = self.set_analyzer_settings()
+        analyzer = Analyzer('settings.json', data_unzipper.get_ready_zips())
+
+    def set_analyzer_settings(self):
+        return

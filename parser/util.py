@@ -15,9 +15,26 @@ def clear_screen():
     os.system('cls')
 
 
+def get_directory_size(path='.'):
+    total = 0
+    for entry in os.scandir(path):
+        if entry.is_file():
+            total += entry.stat().st_size
+        elif entry.is_dir():
+            total += get_directory_size(entry.path)
+    return total
+
+
 def get_file_size(path):
     file_stats = os.stat(path)
     return file_stats.st_size
+
+
+def convert_bytes_to_megabytes(bytes_to_convert, string_format=False):
+    megabytes = round(bytes_to_convert / 1000000, 2)
+    if not string_format:
+        return megabytes
+    return str(megabytes)+'MB'
 
 
 def check_if_facebook_data_path_is_okay(path) -> Path:
@@ -95,6 +112,8 @@ def get_file_from_path(path) -> str:
 
 
 def load_json_file(filepath):
+    if type(filepath).__name__ in ['str', Path]:
+        filepath = open(filepath, 'r')
     return json.load(filepath)
 
 
