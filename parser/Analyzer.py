@@ -1,11 +1,9 @@
 """class for analysis"""
 
 import parser.util as util
+from parser.investigators import ActivityMessages
+from parser.investigators.DataSizeInvestigator import DataSizeInvestigator
 
-
-# activity_messages:
-#       group_interactions.json TODO
-#       people_and_friends.json ????
 
 # ads_information:
 #       advertisers_using_your_activity_or_information.json TODO
@@ -98,17 +96,27 @@ import parser.util as util
 
 # stories
 
+
 class TimePeriod:
     def __init__(self, path):
         self.path = path
         self.folder_name = path.stem
         self.start_date, self.end_date = self.read_dates_from_folder_name()
+        self.current_data = None
 
     def get_start_date(self):
         return self.start_date
 
     def get_end_date(self):
         return self.end_date
+
+    def get_name_from_dates(self):
+        return str(self.get_start_date()) + '_' + str(self.get_end_date())
+
+    def get_unzipped_size(self):
+        size_in_bytes = util.get_directory_size(self.path)
+        size_in_mb = util.convert_bytes_to_megabytes(size_in_bytes)
+        return size_in_mb
 
     def read_dates_from_folder_name(self):
         start_date_no_format = self.folder_name.split('-')[0]
@@ -134,17 +142,69 @@ class BigTimePeriod(TimePeriod):
         self.earliest_start_date = start_end_dates[0]
         self.latest_end_date = start_end_dates[1]
 
+    def get_name_from_dates(self):
+        return str(self.get_earliest_date()) + '_' + str(self.get_latest_date())
+
+    def get_earliest_date(self):
+        return self.earliest_start_date
+
+    def get_latest_date(self):
+        return self.latest_end_date
+
+    def get_unzipped_size(self):
+        size_in_bytes = 0
+        for path in self.paths:
+            size_in_bytes = size_in_bytes + util.get_directory_size(path)
+        size_in_mb = util.convert_bytes_to_megabytes(size_in_bytes)
+        return size_in_mb
+
 
 class Analyzer:
     def __init__(self, settings_file, ready_zips):
         self.settings_dict = None
         self.load_settings(settings_file)
         self.time_periods = []
-        self.len_of_time_periods = 0
+        self.big_time_period = None
         self.create_time_periods(ready_zips)
+        self.analysis_data = {}
 
     def start_analysis(self):
-        print('anal ysis')
+        # read stuff
+
+        # TODO: if setting =>
+        # TODO: also would be good to for setting.useTimePeriodDates or setting.useYearly but this is kinda impossible
+        #       since we don't really the exact date of TimePeriods -> Years in data size
+
+        # -----------------------------------------------------------
+        # ----------------         SIZE (mb)         ----------------
+        # -----------------------------------------------------------
+        size_investigate = DataSizeInvestigator(self.time_periods, self.big_time_period)
+        size_investigate.create_plots()
+        size_investigate.add_to_report()
+        # helpers below vvvv
+        # print(size_investigate.investigated_period_data['periods'].sort_values(by=['size']).tail(5))
+        # print(size_investigate.investigated_period_data['periods'].nlargest(n=5, columns='size'))
+        #
+        # print(size_investigate.investigated_period_data['periods'].sort_values(by=['size']).head(5))
+
+        # -----------------------------------------------------------
+        # ----------------     ACTIVITY_MESSAGES     ----------------
+        # -----------------------------------------------------------
+
+        # ------------------------------
+        # ------- Group Interactions - always there
+        # ------------------------------
+        group_interactions_investigate = ActivityMessages.GroupInteractionsInvestigator(self.time_periods,
+                                                                                        self.big_time_period)
+        group_interactions_investigate.create_plots()
+        group_interactions_investigate.add_to_report()
+
+        # ------------------------------
+        # ------- People and Friends - optional
+        # ------------------------------
+
+        input()
+        return 'wow such analysis'
 
     def load_settings(self, settings_file):
         self.settings_dict = util.load_json_file(settings_file)
@@ -162,7 +222,6 @@ class Analyzer:
         for time_period_path in time_periods:
             time_period = TimePeriod(path=time_period_path)
             self.time_periods.append(time_period)
-            self.len_of_time_periods = self.len_of_time_periods + 1
 
             # find earliest start date and the latest end date
             time_period_start_date = time_period.get_start_date()
@@ -174,11 +233,7 @@ class Analyzer:
             if latest_date is None or latest_date < time_period_end_date:
                 latest_date = time_period_end_date
 
-        big_time_period = BigTimePeriod(
+        self.big_time_period = BigTimePeriod(
             paths=util.get_directories_in_directory(time_periods[0].parent),
             start_end_dates=[earliest_date, latest_date]
         )
-
-        time_periods.append(big_time_period)
-
-        input()

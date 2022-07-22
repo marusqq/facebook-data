@@ -2,6 +2,7 @@
 import os
 
 import parser.util as util
+from parser.Reporter import ReporterPDF
 from parser.logger import logger
 
 from parser.DataUnzipper import DataUnzipper
@@ -21,7 +22,6 @@ class Menu:
             menu.append_item(start)
             menu.append_item(settings)
             menu.show()
-            input()
 
         elif mode == 'analyzer_settings':
             menu = ConsoleMenu("Setup analyzer")
@@ -32,10 +32,26 @@ class Menu:
 
     def analysis(self):
 
+        # Unzip files
         fb_data_path = os.getcwd() + '/data/'
         data_unzipper = DataUnzipper(path=fb_data_path)
         data_unzipper.unzip_files()
 
-        # Ask for settings
+        # Read settings / anaylyse
         analyzer = Analyzer('settings.json', data_unzipper.get_ready_zips())
-        analyzer.start_analysis()
+        analysed_data = analyzer.start_analysis()
+
+        reporter = ReporterPDF(title='facebook_data')
+        reporter.save_pdf()
+
+
+
+        # # Write analysed data to report
+        # # TODO: fix this one day
+        # pdf = PDF()
+        # pdf.set_title_to_pdf('Facebook data analysis')
+        # pdf.set_author('Marius Pozniakovas')
+        # pdf.print_chapter(1, 'File Sizes', 'settings.json')
+        # pdf.print_chapter(2, 'Settings', 'settings.json')
+        # pdf.output('/reports/report_4.pdf')
+        # # pdf.save_pdf()

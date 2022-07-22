@@ -2,6 +2,7 @@
 data/
 data_backup/
 messages/
+reports/
 
 # ide
 .idea/
