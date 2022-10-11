@@ -7,3 +7,15 @@
 4. avg word/message number
 5. something with images?
 6. top5 emojis? 	
+
+
+----------------------------------------------
+
+
+activity_messages:
+	- group_interactions 								| required | single_file | big_period
+	- 
+	
+ads_information:
+	- advertisers_using_your_activity_or_information	| required | single_file | big_period
+	- other_categories_used_to_reach_you 				| required | single_file | big_period

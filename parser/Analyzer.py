@@ -3,6 +3,8 @@
 import parser.util as util
 from parser.investigators import ActivityMessages
 from parser.investigators.DataSizeInvestigator import DataSizeInvestigator
+from parser.investigators import AdsInformation
+from parser.investigators import AppsAndWebsitesOffOfFacebook
 
 
 # ads_information:
@@ -202,6 +204,37 @@ class Analyzer:
         # ------------------------------
         # ------- People and Friends - optional
         # ------------------------------
+        # people_interactions_investigate = ActivityMessages.PeopleAndFriendsInvestigator(self.time_periods,
+        #                                                                                self.big_time_period)
+        # people_interactions_investigate.create_plots()
+        # people_interactions_investigate.add_to_report()
+        # this is nothing interesting honestly
+
+        # -----------------------------------------------------------
+        # --------------    APPS_AND_WEBSITES_OFF_FB     ------------
+        # -----------------------------------------------------------
+
+        # ------------------------------
+        # ------- Apps and Websites - always there
+        # ------------------------------
+
+        apps_and_websites_investigate = AppsAndWebsitesOffOfFacebook.AppsAndWebsitesInvestigator(
+            self.time_periods, self.big_time_period
+        )
+
+        # ------------------------------
+        # ------- Your Apps - always there
+        # ------------------------------
+
+        # ------------------------------
+        # ------- Posts from Apps and Websites - old years
+        # ------------------------------
+
+        # ------------------------------
+        # ------- Your Off Facebook Activity - later years (for me around 2019)
+        # ------------------------------
+
+
 
         input()
         return 'wow such analysis'

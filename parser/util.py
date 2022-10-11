@@ -48,6 +48,7 @@ def load_json_file(filepath):
     data = json.load(filepath)
     return data
 
+
 def unzip_file(zip_path, dest_path):
     # Unzip part
     if not check_if_directory(dest_path):
@@ -158,7 +159,6 @@ def get_datetime_from_string(string_date):
 
 
 def get_difference_between_datetimes(datetime1, datetime2=datetime.now(), interval="default"):
-
     duration = datetime1 - datetime2
     duration_in_s = duration.total_seconds()
 
@@ -202,6 +202,11 @@ def get_difference_between_datetimes(datetime1, datetime2=datetime.now(), interv
 
 def get_current_time_and_date_for_path():
     return datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
+
+
+def get_datetime_from_timestamp(timestamp):
+    return datetime.fromtimestamp(float(timestamp))
+
 
 # --------------------------------------------------------
 # Convertions

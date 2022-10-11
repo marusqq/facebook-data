@@ -44,8 +44,6 @@ class Menu:
         reporter = ReporterPDF(title='facebook_data')
         reporter.save_pdf()
 
-
-
         # # Write analysed data to report
         # # TODO: fix this one day
         # pdf = PDF()
