@@ -52,3 +52,4 @@ class AppsAndWebsitesInvestigator:
 
 class OffFacebookActivity:
     def __init__(self, time_periods, big_period):
+        pass

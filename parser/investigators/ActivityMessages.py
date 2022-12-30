@@ -38,6 +38,7 @@ class GroupInteractionsInvestigator:
         )
 
         # print(df.nlargest(10, columns='interactions'))
+        print(df)
 
     def create_plots(self):
         pass

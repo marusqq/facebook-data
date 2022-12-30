@@ -1,4 +1,0 @@
-example: may22_2022-jul09_2022
-
-^^^
-[3_month_letters_of_start_date][day_of_start_date]_[year_of_start_date]-[3_month_letters_of_end_date][day_of_end_date]_[year_of_end_date]

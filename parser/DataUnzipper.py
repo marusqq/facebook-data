@@ -25,6 +25,7 @@ class DataUnzipper:
 
             if not len(folders_in_time_period_folder):
                 for file_ in files_to_maybe_unzip:
+                    logger.info(file_)
                     self.files_to_unzip.append(file_)
 
             for folder in folders_in_time_period_folder:

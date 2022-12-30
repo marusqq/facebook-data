@@ -6,7 +6,6 @@ from parser.investigators.DataSizeInvestigator import DataSizeInvestigator
 from parser.investigators import AdsInformation
 from parser.investigators import AppsAndWebsitesOffOfFacebook
 
-
 # ads_information:
 #       advertisers_using_your_activity_or_information.json TODO
 #       other_categories_used_to_reach_you TODO
@@ -97,6 +96,7 @@ from parser.investigators import AppsAndWebsitesOffOfFacebook
 # spark_ar
 
 # stories
+from parser.logger import logger
 
 
 class TimePeriod:
@@ -120,6 +120,7 @@ class TimePeriod:
         size_in_mb = util.convert_bytes_to_megabytes(size_in_bytes)
         return size_in_mb
 
+    # format: oct25_2013-oct27_2013
     def read_dates_from_folder_name(self):
         start_date_no_format = self.folder_name.split('-')[0]
         end_date_no_format = self.folder_name.split('-')[1]
@@ -200,14 +201,14 @@ class Analyzer:
                                                                                         self.big_time_period)
         group_interactions_investigate.create_plots()
         group_interactions_investigate.add_to_report()
-
+        # print(group_interactions_investigate.investigated_period_data['periods'])
         # ------------------------------
         # ------- People and Friends - optional
         # ------------------------------
-        # people_interactions_investigate = ActivityMessages.PeopleAndFriendsInvestigator(self.time_periods,
-        #                                                                                self.big_time_period)
-        # people_interactions_investigate.create_plots()
-        # people_interactions_investigate.add_to_report()
+        people_interactions_investigate = ActivityMessages.PeopleAndFriendsInvestigator(self.time_periods,
+                                                                                        self.big_time_period)
+        people_interactions_investigate.create_plots()
+        people_interactions_investigate.add_to_report()
         # this is nothing interesting honestly
 
         # -----------------------------------------------------------
@@ -218,9 +219,9 @@ class Analyzer:
         # ------- Apps and Websites - always there
         # ------------------------------
 
-        apps_and_websites_investigate = AppsAndWebsitesOffOfFacebook.AppsAndWebsitesInvestigator(
-            self.time_periods, self.big_time_period
-        )
+        # apps_and_websites_investigate = AppsAndWebsitesOffOfFacebook.AppsAndWebsitesInvestigator(
+        #     self.time_periods, self.big_time_period
+        # )
 
         # ------------------------------
         # ------- Your Apps - always there
@@ -233,8 +234,6 @@ class Analyzer:
         # ------------------------------
         # ------- Your Off Facebook Activity - later years (for me around 2019)
         # ------------------------------
-
-
 
         input()
         return 'wow such analysis'
@@ -255,6 +254,7 @@ class Analyzer:
         for time_period_path in time_periods:
             time_period = TimePeriod(path=time_period_path)
             self.time_periods.append(time_period)
+
 
             # find earliest start date and the latest end date
             time_period_start_date = time_period.get_start_date()
